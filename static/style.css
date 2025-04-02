@@ -1,0 +1,132 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #e0f7fa, #80deea);
+    min-height: 100vh;
+    margin: 0;
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.instrucciones {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+    padding: 15px;
+    margin: 10px auto 20px auto;
+    max-width: 600px;
+    border-radius: 8px;
+    font-size: 15px;
+    text-align: left;
+    line-height: 1.5;
+}
+
+.tablero {
+    display: grid;
+    grid-template-columns: repeat(8, 60px);
+    grid-template-rows: repeat(8, 60px);
+    margin: 0 auto;
+    border: 3px solid #333;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease-in-out;
+    justify-content: center;
+    width: fit-content;
+    border-radius: 10px;
+    background-color: white;
+    padding: 10px;
+}
+
+.casilla {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.blanca {
+    background-color: #f0d9b5;
+}
+
+.negra {
+    background-color: #b58863;
+}
+
+.reina {
+    color: #222;
+    animation: pop 0.2s ease;
+}
+
+@keyframes pop {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.botones {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+    flex-direction: row;
+}
+
+button {
+    padding: 10px 20px;
+    margin: 5px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+#mensaje {
+    margin-top: 10px;
+    font-weight: bold;
+    font-size: 18px;
+    text-align: center;
+    width: 100%;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.correcto {
+    color: green;
+    animation: glow 1s ease infinite alternate;
+}
+
+.incorrecto {
+    color: red;
+}
+
+@keyframes glow {
+    from {
+        text-shadow: 0 0 10px green;
+    }
+
+    to {
+        text-shadow: 0 0 20px lime;
+    }
+}

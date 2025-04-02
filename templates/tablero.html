@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>8 Reinas - Solución</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h1>Solución {{ index }} de {{ total }}</h1>
+
+    <div class="tablero">
+      {% for fila in range(8) %}
+        {% for columna in range(8) %}
+          {% set es_negra = (fila + columna) % 2 == 1 %}
+          <div class="casilla {{ 'negra' if es_negra else 'blanca' }}">
+            {% if solucion[fila] == columna %}
+              <span class="reina">♛</span>
+            {% endif %}
+          </div>
+        {% endfor %}
+      {% endfor %}
+    </div>
+    
+    <div class="botones">
+      <button onclick="window.location.href='/siguiente'">➡️ Ver siguiente solución</button>
+      <button onclick="window.location.href='/jugar'">🎯 Probar tú mismo</button>
+    </div>
+    
+    <p id="mensaje">
+      Estados explorados: {{ estados }}
+    </p>
+    
+</body>
+</html>

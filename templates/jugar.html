@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Juega las 8 Reinas</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h1>Juega al Desafío de las 8 Reinas</h1>
+    <button onclick="window.location.href='/'">Ver solución automática</button>
+
+    <div class="instrucciones">
+        Coloca una reina (♛) en cada fila del tablero sin que se ataquen entre sí.<br>
+        Puedes activar el <strong>modo asistido</strong> para evitar colocar reinas en posiciones peligrosas.<br>
+        Usa el botón <em>Verificar</em> para comprobar si tu solución es correcta.
+    </div>
+    
+    <div class="tablero" id="tablero"></div>
+
+    <div class="botones">
+        <button onclick="verificar()">Verificar</button>
+        <button onclick="reiniciar()">Reiniciar</button>
+        <button onclick="toggleAsistido()" id="asistidoBtn">Activar Modo Asistido</button>
+        <p id="mensaje"></p>
+    </div>
+
+    <script>
+        const N = 8;
+        let tablero = Array.from({ length: N }, () => Array(N).fill(0));
+        let modoAsistido = false;
+
+        function crearTablero() {
+            const contenedor = document.getElementById("tablero");
+            contenedor.innerHTML = "";
+            for (let fila = 0; fila < N; fila++) {
+                for (let col = 0; col < N; col++) {
+                    const casilla = document.createElement("div");
+                    casilla.className = `casilla ${(fila + col) % 2 ? 'negra' : 'blanca'}`;
+                    casilla.dataset.fila = fila;
+                    casilla.dataset.col = col;
+                    casilla.onclick = () => toggleReina(fila, col, casilla);
+                    contenedor.appendChild(casilla);
+                }
+            }
+        }
+
+        function toggleReina(fila, col, casilla) {
+            if (tablero[fila][col] === 0) {
+                if (modoAsistido && !esSeguro(fila, col)) {
+                    mostrarMensaje("No puedes colocar una reina en una posición amenazada.", true);
+                    return;
+                }
+                tablero[fila][col] = 1;
+                casilla.innerHTML = "♛";
+                casilla.classList.add("reina");
+            } else {
+                tablero[fila][col] = 0;
+                casilla.innerHTML = "";
+                casilla.classList.remove("reina");
+            }
+            feedbackInstantaneo();
+        }
+
+        function verificar() {
+            const mensaje = document.getElementById("mensaje");
+            mensaje.className = "";
+            let reinas = obtenerReinas();
+            if (reinas.length !== 8) {
+                mostrarMensaje("Debes colocar exactamente 8 reinas.", true);
+                return;
+            }
+            if (!unaPorFila(reinas)) {
+                mostrarMensaje("Solo puedes colocar una reina por fila.", true);
+                return;
+            }
+            if (hayConflictos(reinas)) {
+                mostrarMensaje("Hay reinas que se atacan. Intenta de nuevo.", true);
+            } else {
+                mostrarMensaje("✔️ ¡Correcto! Has resuelto el problema.", false);
+            }
+        }
+
+        function obtenerReinas() {
+            let reinas = [];
+            for (let fila = 0; fila < N; fila++) {
+                for (let col = 0; col < N; col++) {
+                    if (tablero[fila][col] === 1) {
+                        reinas.push([fila, col]);
+                    }
+                }
+            }
+            return reinas;
+        }
+
+        function unaPorFila(reinas) {
+            const filas = reinas.map(r => r[0]);
+            return new Set(filas).size === reinas.length;
+        }
+
+        function hayConflictos(reinas) {
+            limpiarConflictos();
+            let conflicto = false;
+            for (let i = 0; i < reinas.length; i++) {
+                for (let j = i + 1; j < reinas.length; j++) {
+                    const [f1, c1] = reinas[i];
+                    const [f2, c2] = reinas[j];
+                    if (c1 === c2 || Math.abs(f1 - f2) === Math.abs(c1 - c2)) {
+                        marcarConflicto(f1, c1);
+                        marcarConflicto(f2, c2);
+                        conflicto = true;
+                    }
+                }
+            }
+            return conflicto;
+        }
+
+        function esSeguro(fila, col) {
+            const reinas = obtenerReinas();
+            return !reinas.some(([f2, c2]) => {
+                return f2 === fila || c2 === col || Math.abs(fila - f2) === Math.abs(col - c2);
+            });
+        }
+
+        function marcarConflicto(fila, col) {
+            const index = fila * N + col;
+            document.querySelectorAll(".casilla")[index].classList.add("conflicto");
+        }
+
+        function limpiarConflictos() {
+            document.querySelectorAll(".casilla").forEach(c => c.classList.remove("conflicto"));
+        }
+
+        function mostrarMensaje(texto, esError) {
+            const mensaje = document.getElementById("mensaje");
+            mensaje.textContent = texto;
+            mensaje.className = esError ? "incorrecto" : "correcto";
+        }
+
+        function feedbackInstantaneo() {
+            const reinas = obtenerReinas();
+            if (reinas.length > 8) {
+                mostrarMensaje("Demasiadas reinas.", true);
+                return;
+            }
+            if (!unaPorFila(reinas)) {
+                mostrarMensaje("Una sola reina por fila.", true);
+                return;
+            }
+            if (hayConflictos(reinas)) {
+                mostrarMensaje("Hay conflictos.", true);
+            } else {
+                mostrarMensaje(`Reinas colocadas: ${reinas.length}`, false);
+            }
+        }
+
+        function toggleAsistido() {
+            modoAsistido = !modoAsistido;
+            const btn = document.getElementById("asistidoBtn");
+            btn.textContent = modoAsistido ? "Desactivar Modo Asistido" : "Activar Modo Asistido";
+            mostrarMensaje(modoAsistido ? "Modo asistido activado." : "Modo asistido desactivado.", false);
+        }
+
+        function reiniciar() {
+            tablero = Array.from({ length: N }, () => Array(N).fill(0));
+            crearTablero();
+            document.getElementById("mensaje").textContent = "";
+            document.getElementById("mensaje").className = "";
+        }
+
+        crearTablero();
+    </script>
+</body>
+</html>
