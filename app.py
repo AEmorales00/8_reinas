@@ -1,5 +1,3 @@
-# app.py
-
 from flask import Flask, render_template, redirect, url_for, session
 from solver import obtener_una_solucion, obtener_soluciones
 import time
@@ -39,4 +37,4 @@ def jugar():
     return render_template("jugar.html")
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=10000)
