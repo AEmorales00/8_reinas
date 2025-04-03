@@ -7,8 +7,6 @@
 </head>
 <body>
     <h1>Juega al Desafío de las 8 Reinas</h1>
-    <button onclick="window.location.href='/'">Ver solución automática</button>
-
     <div class="instrucciones">
         Coloca una reina (♛) en cada fila del tablero sin que se ataquen entre sí.<br>
         Puedes activar el <strong>modo asistido</strong> para evitar colocar reinas en posiciones peligrosas.<br>
@@ -18,11 +16,12 @@
     <div class="tablero" id="tablero"></div>
 
     <div class="botones">
-        <button onclick="verificar()">Verificar</button>
-        <button onclick="reiniciar()">Reiniciar</button>
-        <button onclick="toggleAsistido()" id="asistidoBtn">Activar Modo Asistido</button>
-        <p id="mensaje"></p>
+        <button onclick="verificar()">✅ Verificar solución</button>
+        <button onclick="reiniciar()">🔄 Reiniciar tablero</button>
+        <button onclick="toggleAsistido()" id="asistidoBtn">🧠 Activar Modo Asistido</button>
+        <button onclick="window.location.href='/'">🤖 Ver solución automática</button>
     </div>
+    
 
     <script>
         const N = 8;
@@ -156,7 +155,7 @@
         function toggleAsistido() {
             modoAsistido = !modoAsistido;
             const btn = document.getElementById("asistidoBtn");
-            btn.textContent = modoAsistido ? "Desactivar Modo Asistido" : "Activar Modo Asistido";
+            btn.textContent = modoAsistido ? "❌ Desactivar Modo Asistido" : "🧠 Activar Modo Asistido";
             mostrarMensaje(modoAsistido ? "Modo asistido activado." : "Modo asistido desactivado.", false);
         }
 
